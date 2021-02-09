@@ -1,0 +1,41 @@
+package com.microservicios.commons.services;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
+
+public class CommonServiceImpl<E, R extends CrudRepository<E, Long>> implements CommonService<E> { //Hay que crear un dato (R= repository), interfaz, que herede de CrudRepository
+
+	//Inyección del repositorio ----------------------
+	@Autowired
+	protected R repository; //usamos protected para que las clases hijas lo puedan heredar
+	
+	
+	//Métodos ----------------------------------------
+	@Override
+	@Transactional(readOnly = true)
+	public Iterable<E> findAll() {
+		return repository.findAll();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<E> findById(Long id) {
+		return repository.findById(id);
+	}
+
+	@Override
+	@Transactional
+	public E save(E entity) {
+		return repository.save(entity);
+	}
+
+	@Override
+	@Transactional
+	public void deleteById(Long id) {
+		repository.deleteById(id);
+	}
+
+}
