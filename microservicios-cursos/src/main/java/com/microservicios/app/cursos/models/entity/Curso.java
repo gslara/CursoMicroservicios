@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -17,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.microservicios.commons.alumnas.models.entity.Alumna;
+import com.microservicios.commons.examenes.models.entity.Examen;
 
 @Entity
 @Table(name="cursos")
@@ -36,6 +38,9 @@ public class Curso {
 	@OneToMany(fetch = FetchType.LAZY) //un curso, muchas alumnas. Unidireccional para desacoplar lo más posible
 	private List<Alumna> alumnas;
 	
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Examen> examenes;
+	
 	
 	//Antes de persistir -----------------------------
 	@PrePersist
@@ -47,6 +52,7 @@ public class Curso {
 	//Constructor ------------------------------------
 	public Curso() {
 		this.alumnas = new ArrayList<>();
+		this.examenes = new ArrayList<>();
 	}
 	
 	
@@ -89,6 +95,22 @@ public class Curso {
 	
 	public void removeAlumna(Alumna alumna) {
 		this.alumnas.remove(alumna);
+	}
+
+	public List<Examen> getExamenes() {
+		return examenes;
+	}
+
+	public void setExamenes(List<Examen> examenes) {
+		this.examenes = examenes;
+	}
+	
+	public void addExamen(Examen examen) {
+		this.examenes.add(examen);
+	}
+	
+	public void removeExamen(Examen examen) {
+		this.examenes.remove(examen);
 	}
 	
 }

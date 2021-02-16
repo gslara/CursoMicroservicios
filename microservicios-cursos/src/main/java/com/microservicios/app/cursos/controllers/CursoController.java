@@ -15,6 +15,7 @@ import com.microservicios.app.cursos.models.entity.Curso;
 import com.microservicios.app.cursos.services.CursoService;
 import com.microservicios.commons.alumnas.models.entity.Alumna;
 import com.microservicios.commons.controllers.CommonController;
+import com.microservicios.commons.examenes.models.entity.Examen;
 
 @RestController
 public class CursoController extends CommonController<Curso, CursoService> {
@@ -72,6 +73,38 @@ public class CursoController extends CommonController<Curso, CursoService> {
 		//Curso curso = service.buscarCursoPorIdAlumna(id); //Así lo hace el del curso
 		//return ResponseEntity.ok(curso);
 		return ResponseEntity.ok(service.buscarCursoPorIdAlumna(id));
+	}
+	
+	
+	@PutMapping("/{id}/asignar-examenes")
+	public ResponseEntity<?> asignarExamenes(@RequestBody List<Examen> examenes, @PathVariable Long id) {
+		Optional<Curso> optional = service.findById(id);
+
+		if (optional.isEmpty()) { //nos fijamos si no existe un curso con ese id
+			return ResponseEntity.notFound().build(); //build construye la respuesta con un body vacío
+		}
+		
+		Curso cursoDB = optional.get();
+		examenes.forEach(e -> { //hacemos una función flecha para agregar cada examen
+			cursoDB.addExamen(e);
+		});
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(cursoDB));
+	}
+	
+	
+	@PutMapping("/{id}/eliminar-examen")
+	public ResponseEntity<?> eliminarExamen(@RequestBody Examen examen, @PathVariable Long id) {
+		Optional<Curso> optional = service.findById(id);
+
+		if (optional.isEmpty()) { // nos fijamos si no existe un curso con ese id
+			return ResponseEntity.notFound().build(); // build construye la respuesta con un body vacío
+		}
+		
+		Curso cursoDB = optional.get();
+		cursoDB.removeExamen(examen);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(cursoDB));
 	}
 	
 }

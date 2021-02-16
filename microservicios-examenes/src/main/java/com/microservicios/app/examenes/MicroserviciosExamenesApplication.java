@@ -1,4 +1,4 @@
-package com.microservicios.app.cursos;
+package com.microservicios.app.examenes;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,13 +7,11 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @EnableEurekaClient
 @SpringBootApplication
-@EntityScan({"com.microservicios.commons.alumnas.models.entity",
-			 "com.microservicios.commons.examenes.models.entity",
-			 "com.microservicios.app.cursos.models.entity"})
-public class MicroserviciosCursosApplication {
+@EntityScan({"com.microservicios.commons.examenes.models.entity"})
+public class MicroserviciosExamenesApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MicroserviciosCursosApplication.class, args);
+		SpringApplication.run(MicroserviciosExamenesApplication.class, args);
 	}
 
 }

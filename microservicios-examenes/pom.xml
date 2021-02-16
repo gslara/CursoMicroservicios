@@ -9,10 +9,10 @@
 		<version>2.4.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.microservicios.app.cursos</groupId>
-	<artifactId>microservicios-cursos</artifactId>
+	<groupId>com.microservicios.app.examenes</groupId>
+	<artifactId>microservicios-examenes</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>microservicios-cursos</name>
+	<name>microservicios-examenes</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
@@ -22,11 +22,6 @@
 		<dependency>
 			<groupId>com.microservicios.commons.examenes</groupId>
 			<artifactId>commons-examenes</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.microservicios.commons.alumnas</groupId>
-			<artifactId>commons-alumnas</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
