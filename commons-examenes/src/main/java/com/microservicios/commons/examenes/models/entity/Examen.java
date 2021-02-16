@@ -17,6 +17,9 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -29,6 +32,8 @@ public class Examen {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotEmpty //NotEmpty es para los String
+	@Size(min = 4, max = 30)
 	private String nombre;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -40,6 +45,7 @@ public class Examen {
 	private List<Pregunta> preguntas; //el orphanRemoval es para que cuando una pregunta no esté asignada a un examen (que la llave foránea sea null) sea eliminada. Con mappedBy indicamos el nombre del atributo que mappea la relación (con el @JoinColumn) para que la relación sea bidireccional
 
 	@ManyToOne(fetch = FetchType.LAZY) //muchos exámenes para una asignatura. Relación unidireccional
+	@NotNull //se valida con NotNull porque es un objeto
 	private Asignatura asignatura;
 	
 	

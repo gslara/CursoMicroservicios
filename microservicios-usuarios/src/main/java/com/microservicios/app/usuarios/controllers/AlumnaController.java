@@ -2,8 +2,11 @@ package com.microservicios.app.usuarios.controllers;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,7 +22,12 @@ public class AlumnaController extends CommonController<Alumna, AlumnaService> {
 
 	//Métodos handler del Request ----------------------------
 	@PutMapping("/{id}")
-	public ResponseEntity<?> editar(@RequestBody Alumna alumna, @PathVariable Long id) {
+	public ResponseEntity<?> editar(@Valid @RequestBody Alumna alumna, BindingResult result, @PathVariable Long id) {
+		
+		if(result.hasErrors()) {
+			return this.validar(result);
+		}
+		
 		Optional<Alumna> optional = service.findById(id);
 		
 		if(optional.isEmpty()) { //nos fijamos si no existe una alumna con ese id
