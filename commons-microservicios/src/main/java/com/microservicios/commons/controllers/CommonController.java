@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,12 @@ public class CommonController<E, S extends CommonService<E>> { //tenemos dos val
 	@GetMapping
 	public ResponseEntity<?> listar() {
 		return ResponseEntity.ok().body(service.findAll());
+	}
+	
+	
+	@GetMapping("/pagina")
+	public ResponseEntity<?> listar(Pageable pageable) {
+		return ResponseEntity.ok().body(service.findAll(pageable));
 	}
 	
 	
