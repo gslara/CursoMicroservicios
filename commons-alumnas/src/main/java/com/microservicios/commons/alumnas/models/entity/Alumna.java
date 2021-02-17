@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -14,6 +15,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="alumnas")
@@ -25,11 +28,11 @@ public class Alumna {
 	private Long id;
 	
 	@NotEmpty
-	@Size(min = 4, max = 30)
+	@Size(min = 3, max = 30)
 	private String nombre;
 	
 	@NotEmpty
-	@Size(min = 4, max = 30)
+	@Size(min = 3, max = 30)
 	private String apellido;
 	
 	@NotEmpty
@@ -40,11 +43,21 @@ public class Alumna {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createAt;
 
+	@Lob //permite persistir un large object
+	@JsonIgnore //omitimos el atributo en el JSON, ya que es un contenido binario muy largo que no nos interesa mostrar en el JSON
+	private byte[] foto; //atributo que es un arreglo de bytes
+	
 	
 	//Antes de persistir -----------------------------
 	@PrePersist
 	public void prePersist() {
 		this.createAt = new Date();
+	}
+	
+	
+	//Para que retorne un identificador de la foto
+	public Integer getFotoHashCode() { //get es para que lo muestre y lo serialice en el JSON
+		return (this.foto != null) ? this.foto.hashCode() : null; //hashCode es el código de la foto. Validamos si la foto no es nula
 	}
 	
 	
@@ -87,6 +100,14 @@ public class Alumna {
 
 	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
+	}
+
+	public byte[] getFoto() {
+		return foto;
+	}
+
+	public void setFoto(byte[] foto) {
+		this.foto = foto;
 	}
 
 
