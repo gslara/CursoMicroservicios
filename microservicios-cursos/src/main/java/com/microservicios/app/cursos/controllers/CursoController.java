@@ -2,6 +2,7 @@ package com.microservicios.app.cursos.controllers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -78,9 +79,23 @@ public class CursoController extends CommonController<Curso, CursoService> {
 	
 	@GetMapping("/buscar-por-alumna/{id}")
 	public ResponseEntity<?> buscarCurso(@PathVariable Long id) {
-		//Curso curso = service.buscarCursoPorIdAlumna(id); //Así lo hace el del curso
-		//return ResponseEntity.ok(curso);
-		return ResponseEntity.ok(service.buscarCursoPorIdAlumna(id));
+		Curso curso = service.buscarCursoPorIdAlumna(id);
+		
+		//Nos vamos a comunicar con el microservicio respuestas para obtener la lista de exámenes ids respondidos por la alumna
+		if(curso != null) { //validamos que la alumna pertenezca a un curso
+			List<Long> examenesId = (List<Long>) service.obtenerExamenesIdConRespuestasAlumna(id); //obtenemos la lista de los exámenes respondidos. Tenemos que castear, ya que este método nos devuelve un Iterable
+		
+			List<Examen> examenes = curso.getExamenes().stream().map(examen -> { //examenes es la nueva variable en la que guardaremos los cambios que realizamos con map. Con el operador map a través de stream() podemos modificar este flujo de forma funcional
+				if(examenesId.contains(examen.getId())) { //si el id de un examen está en la lista de exámenes respondidos, seteamos la variable en true
+					examen.setRespondido(true);
+				}
+				return examen; //en el map siempre retornamos el objeto modificado
+			}).collect(Collectors.toList()); //con collect() a través de la clase Collectors, convertimos el flujo modificado en una nueva lista de exámenes
+		
+			curso.setExamenes(examenes); //tenemos que guardar la lista de exámenes modificados en el curso
+		}
+		
+		return ResponseEntity.ok(curso);
 	}
 	
 	

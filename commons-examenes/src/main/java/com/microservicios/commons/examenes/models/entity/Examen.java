@@ -17,6 +17,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -47,6 +48,9 @@ public class Examen {
 	@ManyToOne(fetch = FetchType.LAZY) //muchos exámenes para una asignatura. Relación unidireccional
 	@NotNull //se valida con NotNull porque es un objeto
 	private Asignatura asignatura;
+	
+	@Transient //este atributo no se persiste en la base de datos
+	private boolean respondido;
 	
 	
 	//Constructor ------------------------------------
@@ -105,7 +109,15 @@ public class Examen {
 		this.asignatura = asignatura;
 	}
 	
-	
+	public boolean isRespondido() {
+		return respondido;
+	}
+
+	public void setRespondido(boolean respondido) {
+		this.respondido = respondido;
+	}
+
+
 	///Métodos add y remove pregunta -----------------
 	public void addPregunta(Pregunta pregunta) {
 		this.preguntas.add(pregunta); //agregamos cada pregunta al examen
