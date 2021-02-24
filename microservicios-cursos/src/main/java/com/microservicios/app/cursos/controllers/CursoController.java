@@ -1,11 +1,14 @@
 package com.microservicios.app.cursos.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -23,6 +26,22 @@ import com.microservicios.commons.examenes.models.entity.Examen;
 
 @RestController
 public class CursoController extends CommonController<Curso, CursoService> {
+
+	//Inyectamos un atributo para testear el balanceador de carga
+	@Value("${config.balanceador.test}") //ponemos la configuración del application.properties y @Value va a inyectar en este atributo, el valor de la variable de entorno: BALANCEADOR_TEST. Si no lo encuentra inyecta el texto "por defecto"
+	private String balanceadorTest;  
+	
+	
+	//Método para testear el balanceador de carga
+	@GetMapping("/balanceador-test")
+	public ResponseEntity<?> balanceadorTest() {
+		Map<String, Object> respuesta = new HashMap<String, Object>(); //usamos Map para generar un JSON más personalizado
+		respuesta.put("balanceador", balanceadorTest);
+		respuesta.put("cursos", service.findAll());
+		
+		return ResponseEntity.ok(respuesta); //va a construir un JSON con 2 atributos: balanceador y cursos.
+	}
+
 
 	// Métodos handler del Request ----------------------------
 	@PutMapping("/{id}")
