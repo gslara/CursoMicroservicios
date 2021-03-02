@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,9 +17,11 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.microservicios.commons.alumnas.models.entity.Alumna;
 import com.microservicios.commons.examenes.models.entity.Examen;
 
@@ -39,8 +42,13 @@ public class Curso {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createAt;
 
-	@OneToMany(fetch = FetchType.LAZY) //un curso, muchas alumnas. Unidireccional para desacoplar lo más posible
+	//@OneToMany(fetch = FetchType.LAZY) //un curso, muchas alumnas. Unidireccional para desacoplar lo más posible
+	@Transient
 	private List<Alumna> alumnas;
+	
+	@JsonIgnoreProperties(value = {"curso"}, allowSetters = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true) //curso es el atributo de la clase CursoAlumna que mappea la tabla. CascadeType.ALL: si se elimina el curso que se elimine cursoAlumnas
+	private List<CursoAlumna> cursoAlumnas;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Examen> examenes;
@@ -57,6 +65,7 @@ public class Curso {
 	public Curso() {
 		this.alumnas = new ArrayList<>();
 		this.examenes = new ArrayList<>();
+		this.cursoAlumnas = new ArrayList<>();
 	}
 	
 	
@@ -93,20 +102,30 @@ public class Curso {
 		this.alumnas = alumnas;
 	}
 	
-	public void addAlumna(Alumna alumna) {
-		this.alumnas.add(alumna);
-	}
-	
-	public void removeAlumna(Alumna alumna) {
-		this.alumnas.remove(alumna);
-	}
-
 	public List<Examen> getExamenes() {
 		return examenes;
 	}
 
 	public void setExamenes(List<Examen> examenes) {
 		this.examenes = examenes;
+	}
+
+	public List<CursoAlumna> getCursoAlumnas() {
+		return cursoAlumnas;
+	}
+
+	public void setCursoAlumnas(List<CursoAlumna> cursoAlumnas) {
+		this.cursoAlumnas = cursoAlumnas;
+	}
+	
+	
+	//Add y remove -----------------------------------
+	public void addAlumna(Alumna alumna) {
+		this.alumnas.add(alumna);
+	}
+	
+	public void removeAlumna(Alumna alumna) {
+		this.alumnas.remove(alumna);
 	}
 	
 	public void addExamen(Examen examen) {
@@ -115,6 +134,14 @@ public class Curso {
 	
 	public void removeExamen(Examen examen) {
 		this.examenes.remove(examen);
+	}
+	
+	public void addCursoAlumna(CursoAlumna cursoAlumna) {
+		this.cursoAlumnas.add(cursoAlumna);
+	}
+
+	public void removeCursoAlumna(CursoAlumna cursoAlumna) {
+		this.cursoAlumnas.remove(cursoAlumna);
 	}
 	
 }

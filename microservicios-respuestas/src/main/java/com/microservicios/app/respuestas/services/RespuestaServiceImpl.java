@@ -10,9 +10,12 @@ import com.microservicios.app.respuestas.models.repository.RespuestaRepository;
 @Service
 public class RespuestaServiceImpl implements RespuestaService {
 
+	//Inyección de nuestro repositorio ---------------
 	@Autowired
 	private RespuestaRepository repository;
 	
+	
+	//Métodos ----------------------------------------
 	@Override
 	@Transactional
 	public Iterable<Respuesta> saveAll(Iterable<Respuesta> respuestas) {
